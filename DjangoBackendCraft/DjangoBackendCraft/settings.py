@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'search',
     'stats',
     'users',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +113,7 @@ REST_FRAMEWORK = {
         
     ),
     "TOKEN_OBTAIN_SERIALIZER": "users.serializers.CustomTokenObtainPairSerializer",
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -125,6 +127,15 @@ EMAIL_USE_SSL = True  # Set to True when using SSL
 EMAIL_HOST_USER = 'dummyportafolio@gmail.com'  
 EMAIL_HOST_PASSWORD = 'rrad vhbn ifqf zibp'
 
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Manage Users API',
+    'DESCRIPTION': 'The Manage Users API provides endpoints for user administration, search, statistics, and user management. It uses the OpenAPI 3.0 standard for easy integration and consumption. Authorization Certain endpoints require authentication. Authorization is needed for specific operations.',
+    'VERSION': '0.0.1',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
 
 
 # Internationalization
