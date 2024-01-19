@@ -109,8 +109,23 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
     ),
+    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.CustomTokenObtainPairSerializer",
 }
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465  # Use port 465 for SSL
+EMAIL_USE_SSL = True  # Set to True when using SSL
+EMAIL_HOST_USER = 'dummyportafolio@gmail.com'  
+EMAIL_HOST_PASSWORD = 'rrad vhbn ifqf zibp'
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

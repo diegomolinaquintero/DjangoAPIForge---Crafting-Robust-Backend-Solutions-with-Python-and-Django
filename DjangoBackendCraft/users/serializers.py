@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import CustomUser
+
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(
@@ -43,13 +46,37 @@ class CustomUserSerializer(serializers.ModelSerializer):
         validators=[validate_password],
         style={'input_type': 'password'}
     )
+    def validate_email(self, value):
+        # Obtén el usuario que se está actualizando
+        instance = self.instance
+
+        # Verifica si el nuevo correo electrónico ya está en uso por otro usuario
+        if instance and instance.email == value:
+            # Si el nuevo correo electrónico es el mismo que el actual, no aplicamos la validación
+            return value
+
+        # Validación del correo electrónico solo si está cambiando
+        if CustomUser.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError('This email is already registered.')
+        return value
 
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'password']
 
-    def validate_email(self, value):
-        # Add additional email validations if needed
-        if CustomUser.objects.filter(email__iexact=value).exists():
-            raise serializers.ValidationError('This email is already registered.')
-        return value
+    # def validate_email(self, value):
+    #     # Add additional email validations if needed
+    #     if CustomUser.objects.filter(email__iexact=value).exists():
+    #         raise serializers.ValidationError('This email is already registered.')
+    #     return value
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    new_password = serializers.CharField()
+    confirm_password = serializers.CharField()
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        return token
