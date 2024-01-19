@@ -171,6 +171,9 @@ class CustomTokenObtainPairView(APIView):
 
             try:
                 user = CustomUser.objects.get(email=email)
+                if not user.is_active:
+                    return Response({'error': 'Usuario inactivo.'}, status=400)
+                
                 tokens = get_tokens_for_user(user)
 
                 return Response(tokens)
